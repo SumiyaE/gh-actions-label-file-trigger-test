@@ -21,3 +21,18 @@ jobs:
           echo "Action: ${{ github.event.action }}"
           echo "PR Number: ${{ github.event.pull_request.number }}"
           echo "Labels: ${{ join(github.event.pull_request.labels.*.name, ', ') }}"
+
+      - name: Echo step 1
+        run: echo "Step 1 executed"
+
+      - name: Echo step 2
+        run: echo "Step 2 executed"
+
+      - name: Echo step 3
+        run: echo "Step 3 executed"
+
+      - name: Echo step 4
+        run: echo "Step 4 executed"
+
+      - name: Echo step 5
+        run: echo "Step 5 executed"
