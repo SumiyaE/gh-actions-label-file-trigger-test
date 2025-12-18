@@ -9,25 +9,31 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'test:gauge')
     runs-on: ubuntu-latest
     outputs:
-      file1_changed: ${{ steps.filter-file1.outputs.trigger_files }}
-      file2_changed: ${{ steps.filter-file2.outputs.trigger_files }}
+      commons_changed: ${{ steps.filter-commons.outputs.commons }}
+      service_a_changed: ${{ steps.filter-service-a.outputs.service_a }}
+      service_b_changed: ${{ steps.filter-service-b.outputs.service_b }}
     steps:
       - uses: actions/checkout@v4
-      - name: Check file1 changes
+      - name: Check commons changes
         uses: dorny/paths-filter@v3
-        id: filter-file1
+        id: filter-commons
         with:
-          filters: .github/test-trigger-files/file1-filters.yml
-      - name: Check file2 changes
+          filters: .github/test-trigger-files/filter-commons.yml
+      - name: Check service-a changes
         uses: dorny/paths-filter@v3
-        id: filter-file2
+        id: filter-service-a
         with:
-          filters: .github/test-trigger-files/file2-filters.yml
+          filters: .github/test-trigger-files/filter-service-a.yml
+      - name: Check service-b changes
+        uses: dorny/paths-filter@v3
+        id: filter-service-b
+        with:
+          filters: .github/test-trigger-files/filter-service-b.yml
 
   build_push_apache:
-    name: Build Push Apache Image
+    name: Build Push Apache Image (Service A)
     needs: gate
-    if: needs.gate.outputs.file1_changed == 'true'
+    if: needs.gate.outputs.service_a_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,9 +54,9 @@ jobs:
         run: echo "Verify push result"
 
   build_push_php:
-    name: Build Push PHP Image
+    name: Build Push PHP Image (Service B)
     needs: gate
-    if: needs.gate.outputs.file2_changed == 'true'
+    if: needs.gate.outputs.service_b_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -76,7 +82,10 @@ jobs:
   integration_test:
     name: Integration Test
     needs: gate
-    if: needs.gate.outputs.file1_changed == 'true' || needs.gate.outputs.file2_changed == 'true'
+    if: |
+      needs.gate.outputs.service_a_changed == 'true' ||
+      needs.gate.outputs.service_b_changed == 'true' ||
+      needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
