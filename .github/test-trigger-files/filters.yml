@@ -1,0 +1,24 @@
+# 共通 + 各サービスのトリガーファイル定義
+commons: &commons
+  - 'common-file1'
+  - 'common-file2'
+
+service_a:
+  - *commons
+  - 'file1-a'
+  - 'file1-b'
+
+service_b:
+  - *commons
+  - 'file2-a'
+  - 'file2-b'
+
+service_c:
+  - *commons
+  - 'file3-a'
+  - 'file3-b'
+
+service_d:
+  - *commons
+  - 'file4-a'
+  - 'file4-b'

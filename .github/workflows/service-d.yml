@@ -1,0 +1,42 @@
+name: Service D
+
+on:
+  pull_request:
+    types: [labeled, synchronize, opened, reopened]
+
+jobs:
+  gate:
+    if: contains(github.event.pull_request.labels.*.name, 'test:gauge')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: .github/test-trigger-files/filters.yml
+      - name: Check if should run
+        if: steps.filter.outputs.service_d != 'true'
+        run: |
+          echo "No relevant files changed for Service D"
+          exit 1
+
+  build_push_apache:
+    name: Build Push Apache Image
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build Apache for Service D"
+
+  build_push_php:
+    name: Build Push PHP Image
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build PHP for Service D"
+
+  integration_test:
+    name: Integration Test
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Integration Test for Service D"
