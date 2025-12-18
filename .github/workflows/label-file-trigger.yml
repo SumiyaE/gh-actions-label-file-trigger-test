@@ -8,31 +8,42 @@ on:
       - 'file2-a'
 
 jobs:
-  test:
+  job1:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Job 1 execution
+        run: echo "Job 1 executed"
 
-      - name: Show trigger info
-        run: |
-          echo "Workflow executed!"
-          echo "Event: ${{ github.event_name }}"
-          echo "Action: ${{ github.event.action }}"
-          echo "PR Number: ${{ github.event.pull_request.number }}"
-          echo "Labels: ${{ join(github.event.pull_request.labels.*.name, ', ') }}"
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Job 2 execution
+        run: echo "Job 2 executed"
 
-      - name: Echo step 1
-        run: echo "Step 1 executed"
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Job 3 execution
+        run: echo "Job 3 executed"
 
-      - name: Echo step 2
-        run: echo "Step 2 executed"
+  job4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Job 4 execution
+        run: echo "Job 4 executed"
 
-      - name: Echo step 3
-        run: echo "Step 3 executed"
-
-      - name: Echo step 4
-        run: echo "Step 4 executed"
-
-      - name: Echo step 5
-        run: echo "Step 5 executed"
+  job5:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Job 5 execution
+        run: echo "Job 5 executed"
