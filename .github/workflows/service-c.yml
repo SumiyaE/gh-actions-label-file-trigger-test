@@ -1,0 +1,58 @@
+name: Service C
+
+on:
+  pull_request:
+    types: [labeled, synchronize, opened, reopened]
+
+jobs:
+  gate:
+    if: contains(github.event.pull_request.labels.*.name, 'test:gauge')
+    runs-on: ubuntu-latest
+    outputs:
+      commons_changed: ${{ steps.filter-commons.outputs.commons }}
+      service_changed: ${{ steps.filter-service.outputs.service_c }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check commons changes
+        uses: dorny/paths-filter@v3
+        id: filter-commons
+        with:
+          filters: .github/test-trigger-files/filter-commons.yml
+      - name: Check service changes
+        uses: dorny/paths-filter@v3
+        id: filter-service
+        with:
+          filters: .github/test-trigger-files/filter-service-c.yml
+
+  build_push_apache:
+    name: Build Push Apache Image
+    needs: gate
+    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: echo "Checkout"
+      - name: Build and Push Apache image
+        run: echo "Build and Push Apache image for Service C"
+
+  build_push_php:
+    name: Build Push PHP Image
+    needs: gate
+    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: echo "Checkout"
+      - name: Build and Push PHP image
+        run: echo "Build and Push PHP image for Service C"
+
+  integration_test:
+    name: Integration Test
+    needs: gate
+    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: echo "Checkout"
+      - name: Run Integration Test
+        run: echo "Run Integration Test for Service C"
