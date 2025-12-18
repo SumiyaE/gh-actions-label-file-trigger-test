@@ -1,4 +1,0 @@
-# サービスC用トリガーファイル
-service_c:
-  - 'file3-a'
-  - 'file3-b'

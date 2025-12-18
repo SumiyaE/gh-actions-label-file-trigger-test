@@ -1,4 +1,0 @@
-# サービスD用トリガーファイル
-service_d:
-  - 'file4-a'
-  - 'file4-b'

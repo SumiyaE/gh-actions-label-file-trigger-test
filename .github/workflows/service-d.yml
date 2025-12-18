@@ -8,51 +8,35 @@ jobs:
   gate:
     if: contains(github.event.pull_request.labels.*.name, 'test:gauge')
     runs-on: ubuntu-latest
-    outputs:
-      commons_changed: ${{ steps.filter-commons.outputs.commons }}
-      service_changed: ${{ steps.filter-service.outputs.service_d }}
     steps:
       - uses: actions/checkout@v4
-      - name: Check commons changes
-        uses: dorny/paths-filter@v3
-        id: filter-commons
+      - uses: dorny/paths-filter@v3
+        id: filter
         with:
-          filters: .github/test-trigger-files/filter-commons.yml
-      - name: Check service changes
-        uses: dorny/paths-filter@v3
-        id: filter-service
-        with:
-          filters: .github/test-trigger-files/filter-service-d.yml
+          filters: .github/test-trigger-files/filters.yml
+      - name: Check if should run
+        if: steps.filter.outputs.service_d != 'true'
+        run: |
+          echo "No relevant files changed for Service D"
+          exit 1
 
   build_push_apache:
     name: Build Push Apache Image
     needs: gate
-    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        run: echo "Checkout"
-      - name: Build and Push Apache image
-        run: echo "Build and Push Apache image for Service D"
+      - run: echo "Build Apache for Service D"
 
   build_push_php:
     name: Build Push PHP Image
     needs: gate
-    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        run: echo "Checkout"
-      - name: Build and Push PHP image
-        run: echo "Build and Push PHP image for Service D"
+      - run: echo "Build PHP for Service D"
 
   integration_test:
     name: Integration Test
     needs: gate
-    if: needs.gate.outputs.service_changed == 'true' || needs.gate.outputs.commons_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        run: echo "Checkout"
-      - name: Run Integration Test
-        run: echo "Run Integration Test for Service D"
+      - run: echo "Integration Test for Service D"

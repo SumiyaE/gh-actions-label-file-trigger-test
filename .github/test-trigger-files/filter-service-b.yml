@@ -1,4 +1,0 @@
-# サービスB用トリガーファイル
-service_b:
-  - 'file2-a'
-  - 'file2-b'
