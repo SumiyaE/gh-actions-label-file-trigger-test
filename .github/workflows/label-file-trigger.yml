@@ -8,42 +8,56 @@ on:
       - 'file2-a'
 
 jobs:
-  job1:
+  build_push_apache:
+    name: Build Push Apache Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Job 1 execution
-        run: echo "Job 1 executed"
+        run: echo "Checkout"
+      - name: Add CODMON_APP_VERSION to BUILD_ARGS
+        run: echo "Add CODMON_APP_VERSION to BUILD_ARGS"
+      - name: Set up Docker Buildx
+        run: echo "Set up Docker Buildx"
+      - name: Build base Apache image (local only)
+        run: echo "Build base Apache image (local only)"
+      - name: Configure AWS Credentials
+        run: echo "Configure AWS Credentials"
+      - name: Login to Amazon ECR
+        run: echo "Login to Amazon ECR"
+      - name: Build and Push test-env Apache image to ECR
+        run: echo "Build and Push test-env Apache image to ECR"
+      - name: Verify push result
+        run: echo "Verify push result"
 
-  job2:
+  build_push_php:
+    name: Build Push PHP Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Job 2 execution
-        run: echo "Job 2 executed"
+        run: echo "Checkout"
+      - name: Add CODMON_APP_VERSION to BUILD_ARGS
+        run: echo "Add CODMON_APP_VERSION to BUILD_ARGS"
+      - name: Set up Docker Buildx
+        run: echo "Set up Docker Buildx"
+      - name: Build base PHP image (local only)
+        run: echo "Build base PHP image (local only)"
+      - name: Configure AWS Credentials
+        run: echo "Configure AWS Credentials"
+      - name: Login to Amazon ECR
+        run: echo "Login to Amazon ECR"
+      - name: Build and Push test-env PHP image to ECR
+        run: echo "Build and Push test-env PHP image to ECR"
+      - name: Verify push result
+        run: echo "Verify push result"
 
-  job3:
+  ###################################
+  # 必要なK8sリソースを作成しテストを実行 #
+  ###################################
+  integration_test:
+    name: Integration Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Job 3 execution
-        run: echo "Job 3 executed"
-
-  job4:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Job 4 execution
-        run: echo "Job 4 executed"
-
-  job5:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Job 5 execution
-        run: echo "Job 5 executed"
+        run: echo "Checkout"
+      - name: Run Integration Test on K8s
+        run: echo "Run Integration Test on K8s"
